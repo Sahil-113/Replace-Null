@@ -1,0 +1,50 @@
+CREATE TABLE HZL_Table (
+    Date DATE,
+    BU VARCHAR(10),
+    Value INT
+);
+
+INSERT INTO HZL_Table (Date, BU, Value) VALUES
+('2024-01-01', 'hzl', 3456),
+('2024-02-01', 'hzl', NULL),
+('2024-03-01', 'hzl', NULL),
+('2024-04-01', 'hzl', NULL),
+('2024-01-01', 'SC', 32456),
+('2024-02-01', 'SC', NULL),
+('2024-03-01', 'SC', NULL),
+('2024-04-01', 'SC', NULL),
+('2024-05-01', 'SC', 345),
+('2024-06-01', 'SC', NULL);
+
+
+WITH RECURSIVE Fill_Nulls AS (
+    SELECT 
+        Date,
+        BU,
+        Value,
+        ROW_NUMBER() OVER (PARTITION BY BU ORDER BY Date) AS rn
+    FROM HZL_Table
+),
+Recurse AS (
+    SELECT 
+        Date,
+        BU,
+        Value,
+        rn
+    FROM Fill_Nulls
+    WHERE rn = 1
+
+    UNION ALL
+
+    SELECT 
+        f.Date,
+        f.BU,
+        COALESCE(f.Value, r.Value) AS Value,
+        f.rn
+    FROM Fill_Nulls f
+    JOIN Recurse r
+    ON f.BU = r.BU AND f.rn = r.rn + 1
+)
+SELECT Date, BU, Value
+FROM Recurse
+ORDER BY BU, Date;
