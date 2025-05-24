@@ -26,7 +26,7 @@ SELECT * FROM Production.Product WHERE Name LIKE 'A%';
 
 SELECT DISTINCT CustomerID FROM Sales.SalesOrderHeader;
 
--- 8. List of customers who live in London and have bought chai
+--8. List of customers who live in London and have bought chai
 
 SELECT DISTINCT c.CustomerID, c.CompanyName
 FROM Sales.Customer c
@@ -248,14 +248,14 @@ FROM Purchasing.ProductVendor pv
 JOIN Purchasing.Vendor v ON pv.BusinessEntityID = v.BusinessEntityID
 GROUP BY v.Name;
 
--- 41. Top ten customers based on their business
+--41. Top ten customers based on their business
 
 SELECT TOP 10 CustomerID, SUM(TotalDue) AS TotalSpent
 FROM Sales.SalesOrderHeader
 GROUP BY CustomerID
 ORDER BY TotalSpent DESC;
 
--- 42. What is the total revenue of the company
+--42. What is the total revenue of the company
 
 SELECT SUM(TotalDue) AS TotalRevenue FROM Sales.SalesOrderHeader;
 
